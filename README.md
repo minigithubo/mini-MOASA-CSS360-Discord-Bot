@@ -1,3 +1,29 @@
+# MOASA CSS360 Discord Bot
+
+## Project Overview
+This repository is a group project for CSS360.
+The team is using this repository to set up collaboration tools and infrastructure for a Discord bot project.
+The specific functionality of the bot is still being discussed.
+
+## Current Project Status
+- Group repository and individual forks created
+- GitHub Projects (Kanban board) set up
+- Discord deployment server created
+- Discord test servers created
+- Project is currently in the planning and setup phase
+
+## Team
+- Team Name: MOASA
+- Members:
+  - Mini
+  - Oliver
+  - Alexandra
+  - Sari
+  - Ayad
+
+## Course Context
+This project is part of CSS360 and is under active development.
+The README will be updated as the project design becomes clearer.
 
 
 # Javascript Discord Welcome MemeBot with GitHub Codespaces
