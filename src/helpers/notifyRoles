@@ -1,0 +1,14 @@
+export const dmRoles = async (roles, guild) => {
+  for (const [userId, role] of roles.entries()) {
+    try {
+      const member = await guild.members.fetch(userId);
+
+      await member.send(
+        `🎭 **Your Role:** ${role}\n\n` +
+        "Do not reveal your role to other players unless instructed."
+      );
+    } catch (err) {
+      console.error(`Could not DM user ${userId}`, err);
+    }
+  }
+};
