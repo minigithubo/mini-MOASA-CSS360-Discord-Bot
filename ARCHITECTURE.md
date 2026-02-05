@@ -40,3 +40,41 @@ The Mafia game engine highlights the bot's ability to handle Asynchronous State 
 Modularity: The game logic is decoupled from the Discord API wrapper, allowing for easier debugging of game rules.
 
 Persistence: By using a dedicated state storage, the bot can maintain game integrity even when multiple events (like simultaneous votes) occur.
+
+
+## Control-flow: User Command Handling
+
+### Overview
+This diagram illustrates how user-issued slash commands /join, /rule, /role, /mycommands, /reset, /mafia role are processed by the bot.
+This section focuses on the short-lived execution path triggered by a single user interaction.
+
+![Command Control Flow](docs/diagram/Control-flow%20graph.png)
+
+### Execution Steps
+1. A user executes a slash command
+2. The event listener extracts the command name
+3. The corresponding command module is located in the `commands` directory
+4. The command's `execute(interaction)` function is called
+5. The command reads or updates the game state when required
+6. A response is generated based on conditional logic
+7. The bot replies to Discord (optionally ephemeral)
+
+### Command Examples
+Although all commands share the same execution pipeline, their internal logic differs.
+
+- `/join` : Starts player recruitment and registers the user into the game. If at least three players join within 15 seconds, roles are automatically assigned.
+- `/rule` : Displays the game rules.
+- `/role` : Shows the player's own role and available actions.
+- `/mycommands` : Lists the commands currently available to the player.
+- `/reset` : Resets the Mafia game.
+- `/mafia role` : Displays all roles in the Mafia game.
+
+### Architectural Significance
+All commands share the same execution pipeline.
+
+- Event Layer: receives Discord events
+- Command Layer: handles command-specific logic
+- State Layer: manages game data
+
+This design allows new commands to be added without modifying the event listener.
+Low coupling with the game state also improves maintainability and debugging.
