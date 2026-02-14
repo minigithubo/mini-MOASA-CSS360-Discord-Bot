@@ -148,12 +148,12 @@ The test was executed using:
 
 * NODE_ENV=test c8 node --test
 
-All 7 tests given were passed successfully.
+All 7 tests that I implemented for the test coverage analysis were passed successfully.
 
 ### Coverage Results
 ![Final Coverage Results](./docs/code-analysis/test-coverage.png)
 
-The statement and line coverages are relatively strong (~75%), which indicates that most of our code paths are tested. However, the function coverage is significantly lower, which means that several defined functions for the test were not fully exercised.
+The statement and line coverages are relatively strong (~75%), which indicates that most of our code paths are tested. However, the function coverage is significantly lower, which means that several functions for the test were not fully exercised.
 
 ### Components Covered by Tests
 
@@ -182,10 +182,10 @@ I came across various technical challenges as I was measuring test coverage for 
 
 Issue 1: ESM vs CommonJS Compatibility
 
-The project uses:
+The Mafia Bot project uses:
 "type": "module"
 
-However, discord.js is distributed as a CommonJS module, and this caused runtime errors during the execution of my test coverage analysis. Errors included named export errors and constructor initialization failures. 
+Discord.js is distributed as a CommonJS module, so this caused runtime errors during the execution of my test coverage analysis. Errors included named export errors and constructor initialization failures. 
 
 Resolution:
 
@@ -196,24 +196,24 @@ Issue 2: Discord Runtime Code Executing During Tests
 
 Command files exported:
 
-The command files originally exported Discord command builders that executed at module load time, which caused test failures when Discord objects weren;t available.
+The command files originally exported Discord command builders that executed at module load time, which caused test failures when Discord objects weren't available.
 
 Resolution:
 
-Command metadata creation was conditionally wrapped to prevent any execution in the test, which improved the isolation of logic and increased the reliability of the test. 
+I conditionally wrapped command metadata creation to prevent any execution in the test, which improved the isolation of logic and increased the reliability of the test. 
 
 
 Issue 3: Tight Coupling to Discord Client Internals
 
-Certain command logic depended directlky on Discord client internals such as cached users, which made the mocking for the tests more complicated to execute. As a result, more complex mocks were required and the isolation of logic was more diffcult to implement for said tests.
+Certain command logic depended directly on Discord client internals such as cached users, which made the mocking for the tests more complicated to execute. As a result, more complex mocks were required and the isolation of logic was more diffcult to implement for said tests.
 
 ### Identified Weaknesses from Coverage Results
 
 1. Low Function Coverage (36.84%)
 
-Although statements and lines are ~75%, the function coverage is significantly lower.
+Although statement and line coverage are ~75%, the function coverage is significantly lower.
 
-This indicates that some code paths aren't executed during testing, and that certain command flows aren't being fully simulated.
+This indicates that some code paths weren't executed during testing, and that certain command flows weren't being fully simulated.
 
 As an example, the recruitment flow in join.js couldn't be fully tested, as well as the countown timing logic. 
 
@@ -229,21 +229,17 @@ The reason these areas weren't properly covered in the test was because they dep
 
 3. Time-Dependent Logic Reduces Testability
 
-The 15-second recruitment countdown in join.js, while helpful for the game lobby, increases complexity, slows down automated testing, and limits the branch coverage for the code.
-
-Recommendation:
-
-Introduce a configurable timer duration for test environemnts to imporve the test coverage and reduce the execution time. 
+The 15-second recruitment countdown in join.js, while helpful for the game lobby, increases complexity, slows down automated testing, and limits the branch coverage for the code. For testing environments, I'd work around that countdown in order to increase the coverage. 
 
 ### Architectural Insights from Testing
 
-Through the process of measuring test coverage, several design limitations became visible:
-* Logic and Discord response formatting are mixed together
-* Global mutable state prevents multiple games from running at the same time
+Through the process of measuring test coverage, these design limitations became visible:
+* Command logic and Discord response formatting are mixed together
+* The global state prevents multiple games from running at the same time
 * Commands have too many responsibilities inside a singular method
 * Some code executes at module load time rather than the runtime
 
-Testing the code coverage exposed these weaknesses that weren't immediately visible during our code development.
+Testing the code coverage exposed these weaknesses that weren't immediately visible during our code development, and we will consider these weaknesses moving on with our work. 
 
 # Code Analysis Report(6)
 ## Sari Ando – Fuzz Testing Analysis
@@ -290,7 +286,7 @@ Observed stack trace shows propagation through processTicksAndRejections.
 ### Impact
 This may cause:
 - Terminate the process
-- Brak the ongoing games
+- Break the ongoing games
 
 ### To Fix
 Add structured validation before async operations and isolate state mutation from message generation.
@@ -318,7 +314,7 @@ try {
 resetTransientState();
 
 ## Conclusion
-From this tester, we were able to reveale the runtime reliability and architectural robustness issues.  
+From this tester, we were able to reveal the runtime reliability and architectural robustness issues.  
 The bot is currently icomplete and still lacks sufficient error handling.
 Even a single malformed interaction can cause unstable behavior or halt further execution paths.  
 Stability and fault tolerance can be improved by adding validation guards and isolating command execution. 
